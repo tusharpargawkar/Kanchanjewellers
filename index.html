@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kanchan Jewellers | Heritage & Contemporary Fine Jewellery</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --gold-primary: #d4af37;
+      --gold-light: #f3e5ab;
+      --gold-dark: #aa820a;
+      --bg-dark: #0d0d0d;
+      --bg-card: #161616;
+      --text-main: #f5f5f5;
+      --text-muted: #a3a3a3;
+      --border-color: rgba(212, 175, 55, 0.25);
+      --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    h1, h2, h3 {
+      font-family: 'Cormorant Garamond', serif;
+      letter-spacing: 1px;
+    }
+
+    /* Navbar */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(12px);
+      background: rgba(13, 13, 13, 0.85);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.2rem 8%;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--gold-primary);
+      text-decoration: none;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-main);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: var(--transition-smooth);
+    }
+
+    .nav-links a:hover {
+      color: var(--gold-primary);
+    }
+
+    .btn-gold {
+      background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
+      color: #000;
+      font-weight: 600;
+      padding: 0.7rem 1.6rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 0.85rem;
+      letter-spacing: 0.5px;
+      transition: var(--transition-smooth);
+      display: inline-block;
+    }
+
+    .btn-gold:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+    }
+
+    /* Hero Section */
+    .hero {
+      min-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0 10%;
+      background: radial-gradient(circle at center, #241e12 0%, #0d0d0d 70%);
+      position: relative;
+    }
+
+    .hero-badge {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: var(--gold-light);
+      margin-bottom: 1.5rem;
+      padding: 0.4rem 1.2rem;
+      border: 1px solid var(--border-color);
+      border-radius: 50px;
+    }
+
+    .hero h1 {
+      font-size: 3.8rem;
+      max-width: 800px;
+      line-height: 1.15;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(to right, #fff, var(--gold-light), var(--gold-primary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      max-width: 600px;
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      margin-bottom: 2.2rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1.2rem;
+    }
+
+    .btn-outline {
+      border: 1px solid var(--gold-primary);
+      color: var(--gold-primary);
+      padding: 0.7rem 1.6rem;
+      border-radius: 4px;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: var(--transition-smooth);
+    }
+
+    .btn-outline:hover {
+      background: rgba(212, 175, 55, 0.1);
+    }
+
+    /* Section Container */
+    .section {
+      padding: 5rem 8%;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 3.5rem;
+    }
+
+    .section-title h2 {
+      font-size: 2.5rem;
+      color: var(--gold-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .section-title p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* Collections */
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      transition: var(--transition-smooth);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+      border-color: var(--gold-primary);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+    }
+
+    .card h3 {
+      font-size: 1.6rem;
+      margin-bottom: 1rem;
+      color: #fff;
+    }
+
+    .card p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Reviews Section */
+    .reviews-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+
+    .review-card {
+      background: var(--bg-card);
+      border-left: 3px solid var(--gold-primary);
+      padding: 1.8rem;
+      border-radius: 4px;
+    }
+
+    .stars {
+      color: #ffd700;
+      margin-bottom: 0.8rem;
+      font-size: 1.1rem;
+    }
+
+    .review-text {
+      font-size: 0.9rem;
+      color: #dedede;
+      font-style: italic;
+      margin-bottom: 1rem;
+    }
+
+    .review-author {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--gold-light);
+    }
+
+    /* Store Info & Inquiry */
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 3rem;
+    }
+
+    .info-details h3 {
+      font-size: 1.8rem;
+      color: var(--gold-primary);
+      margin-bottom: 1rem;
+    }
+
+    .info-details p {
+      margin-bottom: 1rem;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .lead-form input, .lead-form textarea {
+      width: 100%;
+      background: #202020;
+      border: 1px solid #333;
+      padding: 0.8rem;
+      margin-bottom: 1rem;
+      color: #fff;
+      border-radius: 4px;
+      font-family: inherit;
+    }
+
+    .lead-form input:focus, .lead-form textarea:focus {
+      outline: none;
+      border-color: var(--gold-primary);
+    }
+
+    /* Floating WhatsApp Button */
+    .whatsapp-fab {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      background-color: #25d366;
+      color: #fff;
+      border-radius: 50%;
+      width: 58px;
+      height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+      z-index: 999;
+      text-decoration: none;
+      font-size: 1.8rem;
+      transition: var(--transition-smooth);
+    }
+
+    .whatsapp-fab:hover {
+      transform: scale(1.1);
+    }
+
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 2.5rem; }
+      .info-grid { grid-template-columns: 1fr; padding: 1.5rem; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header>
+    <a href="#" class="logo">Kanchan Jewellers</a>
+    <ul class="nav-links">
+      <li><a href="#collections">Collections</a></li>
+      <li><a href="#reviews">Google Reviews</a></li>
+      <li><a href="#about">About & Visit</a></li>
+    </ul>
+    <a href="tel:07877341102" class="btn-gold">Call Showroom</a>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-badge">Serving Kopar Khairane Since 1995</div>
+    <h1>Timeless Gold, Diamond & Antique Jewellery</h1>
+    <p>Handcrafted with love and passion. Trusted for authentic 91.6 hallmarked jewellery, bridal sets, and custom bespoke designs.</p>
+    <div class="hero-actions">
+      <a href="#collections" class="btn-gold">View Collections</a>
+      <a href="https://wa.me/917877341102?text=Hello%20Kanchan%20Jewellers,%20I%20am%20interested%20in%20viewing%20your%20designs" class="btn-outline">WhatsApp Catalog</a>
+    </div>
+  </section>
+
+  <!-- Collections Showcase -->
+  <section class="section" id="collections">
+    <div class="section-title">
+      <h2>Curated Collections</h2>
+      <p>Precision craftsmanship meeting timeless cultural heritage</p>
+    </div>
+    <div class="grid-3">
+      <div class="card">
+        <h3>Antique & Heritage</h3>
+        <p>Royal bridal chokers, temple designs, and vintage handcrafted necklaces made for milestones.</p>
+        <button class="btn-outline" onclick="openInquiry('Antique Jewellery')">Request Catalog</button>
+      </div>
+      <div class="card">
+        <h3>Hallmarked Gold</h3>
+        <p>Certified 91.6 purity daily wear chains, bangles, and customized bridal sets with transparent pricing.</p>
+        <button class="btn-outline" onclick="openInquiry('916 Gold Jewellery')">Request Catalog</button>
+      </div>
+      <div class="card">
+        <h3>Custom Bridal Sets</h3>
+        <p>Personalized design consultations to turn your bridal jewellery visions into reality.</p>
+        <button class="btn-outline" onclick="openInquiry('Custom Bridal Set')">Request Catalog</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Google Reviews -->
+  <section class="section" id="reviews" style="background: #111;">
+    <div class="section-title">
+      <h2>Rated 4.7★ On Google</h2>
+      <p>Hear directly from satisfied patrons in Kopar Khairane</p>
+    </div>
+    <div class="reviews-container">
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <p class="review-text">"Superb and latest collection of gold, silver, and real gemstone jewelry. The staff is courteous, honest, and gives genuine rate advice."</p>
+        <div class="review-author">— Hrushikesh Gorde</div>
+      </div>
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <p class="review-text">"Best shop in Navi Mumbai! Every week new designs are available with verified 91.6 hallmarking. Highly recommended for bridal purchases."</p>
+        <div class="review-author">— Usha Rathode</div>
+      </div>
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <p class="review-text">"Handcrafted with love and passion. Very transparent making charges and great customer care."</p>
+        <div class="review-author">— Jayesh Bhanke</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Store Visit & Lead Capture -->
+  <section class="section" id="about">
+    <div class="info-grid">
+      <div class="info-details">
+        <h3>Visit Our Showroom</h3>
+        <p><strong>Address:</strong> Shop No. 9/10, Vashi Kopar Khairane Rd, Sector 18, Kopar Khairane, Navi Mumbai - 400709</p>
+        <p><strong>Timings:</strong> 10:00 AM – 9:30 PM (Daily)</p>
+        <p><strong>Phone:</strong> +91 78773 41102 / +91 98195 70793</p>
+        <p><strong>Hallmarking:</strong> 100% BIS Hallmarked 91.6 Certified Gold</p>
+      </div>
+
+      <form class="lead-form" onsubmit="handleLead(event)">
+        <h3 style="font-family:'Cormorant Garamond'; font-size:1.8rem; margin-bottom:1rem; color:var(--gold-primary);">Inquire / Book Appointment</h3>
+        <input type="text" id="custName" placeholder="Your Name" required />
+        <input type="tel" id="custPhone" placeholder="Your Phone Number" required />
+        <textarea id="custMsg" rows="3" placeholder="What designs or products are you looking for?"></textarea>
+        <button type="submit" class="btn-gold" style="width: 100%;">Submit Inquiry</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- WhatsApp Floating Action Button -->
+  <a href="https://wa.me/917877341102?text=Hello%20Kanchan%20Jewellers,%20I%20would%20like%20to%20know%20more%20about%20your%20jewellery%20collection" class="whatsapp-fab" target="_blank" title="Chat on WhatsApp">💬</a>
+
+  <script>
+    function openInquiry(itemName) {
+      const msgBox = document.getElementById('custMsg');
+      msgBox.value = `I am interested in exploring designs for: ${itemName}`;
+      document.getElementById('about').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function handleLead(e) {
+      e.preventDefault();
+      const name = document.getElementById('custName').value;
+      const phone = document.getElementById('custPhone').value;
+      const msg = document.getElementById('custMsg').value;
+
+      // Automatically forwards lead straight to WhatsApp
+      const whatsappURL = `https://wa.me/917877341102?text=${encodeURIComponent(`New Website Lead:\nName: ${name}\nPhone: ${phone}\nMessage: ${msg}`)}`;
+      window.open(whatsappURL, '_blank');
+    }
+  </script>
+</body>
+</html>
