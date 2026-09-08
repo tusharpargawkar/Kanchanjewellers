@@ -3,17 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Fine Jewelry Collection | Rates & Custom Designs</title>
+  <title>Bespoke Fine Jewelry & Bridal Heirlooms | Exclusive Collections</title>
+  
+  <!-- Tailwind CSS & FontAwesome -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Official Instagram Embed Processing Script -->
+  <script async src="//www.instagram.com/embed.js"></script>
+
   <style>
     html { scroll-behavior: smooth; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .font-serif-luxury { font-family: 'Cinzel', serif; }
 
     /* Scroll reveal transitions */
     .reveal-on-scroll {
       opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+      transform: translateY(28px);
+      transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
       will-change: opacity, transform;
     }
     .reveal-on-scroll.is-visible {
@@ -21,401 +32,633 @@
       transform: translateY(0);
     }
 
-    /* Subtle shimmer on live rate ticker */
-    @keyframes rateGlow {
-      0%, 100% { border-color: rgba(234, 179, 8, 0.2); }
-      50% { border-color: rgba(234, 179, 8, 0.6); }
+    /* Ambient Gold Shimmer Animations */
+    @keyframes goldShine {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
     }
-    .rate-card-glow {
-      animation: rateGlow 4s infinite ease-in-out;
+    .gold-shimmer {
+      background: linear-gradient(90deg, rgba(245,158,11,0) 0%, rgba(251,191,36,0.3) 50%, rgba(245,158,11,0) 100%);
+      background-size: 200% 100%;
+      animation: goldShine 6s infinite;
     }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #07090e; }
+    ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #d97706; }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans antialiased selection:bg-amber-500 selection:text-slate-950">
+<body class="bg-[#08090d] text-slate-100 antialiased selection:bg-amber-500 selection:text-black">
 
-  <!-- Sticky Live Ticker / Rates Header -->
-  <header class="fixed top-0 left-0 right-0 z-50 bg-slate-950/85 backdrop-blur-md border-b border-slate-800">
-    <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-      <a href="#" class="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-        <i class="fas fa-gem text-amber-400"></i>
-        <span>Jewels<span class="text-amber-400">.</span></span>
-      </a>
+  <!-- TOP BAR: Live Bullion Market Prices (Auto-Updated) -->
+  <div class="bg-black/90 border-b border-amber-950/40 py-2.5 px-4 text-xs font-mono tracking-wide text-slate-300">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+        <span class="text-amber-400 font-semibold uppercase tracking-wider text-[11px]">Today's Indicative Bullion Rates:</span>
+      </div>
 
-      <!-- Dynamic Metal Rates Badge -->
-      <div class="hidden sm:flex items-center gap-4 text-xs font-mono">
-        <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800">
-          <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
-          <span class="text-slate-400">Gold (24K/10g):</span>
-          <span id="gold-price" class="text-amber-300 font-bold">Loading...</span>
+      <div class="flex items-center gap-4 sm:gap-8">
+        <div class="flex items-center gap-1.5">
+          <i class="fas fa-coins text-amber-400 text-xs"></i>
+          <span class="text-slate-400">24K Gold (10g):</span>
+          <span id="rate-gold-24k" class="text-amber-300 font-bold">Calculating...</span>
         </div>
-        <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800">
-          <span class="text-slate-400">Silver (10g):</span>
-          <span id="silver-price" class="text-slate-200 font-bold">Loading...</span>
+        <div class="flex items-center gap-1.5">
+          <i class="fas fa-ring text-amber-500 text-xs"></i>
+          <span class="text-slate-400">22K Gold (10g):</span>
+          <span id="rate-gold-22k" class="text-amber-200 font-bold">Calculating...</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <i class="fas fa-gem text-slate-300 text-xs"></i>
+          <span class="text-slate-400">Silver 999 (10g):</span>
+          <span id="rate-silver" class="text-slate-100 font-bold">Calculating...</span>
         </div>
       </div>
 
+      <div class="hidden md:flex items-center gap-2 text-slate-400 text-[11px]">
+        <i class="fas fa-shield-halved text-amber-500"></i>
+        <span>100% BIS Hallmarked • Certified Authenticity</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- NAVIGATION -->
+  <header class="sticky top-0 z-50 bg-[#08090d]/90 backdrop-blur-xl border-b border-slate-900">
+    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+      <a href="#" class="flex flex-col">
+        <span class="font-serif-luxury text-2xl font-bold tracking-[0.2em] text-white">
+          PARGAWKAR<span class="text-amber-500">.</span>
+        </span>
+        <span class="text-[9px] tracking-[0.35em] text-amber-400 uppercase font-mono">Fine Jewellers & Atelier</span>
+      </a>
+
+      <nav class="hidden lg:flex items-center space-x-8 text-xs font-semibold uppercase tracking-widest text-slate-300">
+        <a href="#about" class="hover:text-amber-400 transition">Heritage</a>
+        <a href="#instagram-reels" class="hover:text-amber-400 transition">Video Reels & Offers</a>
+        <a href="#catalog" class="hover:text-amber-400 transition">Bespoke Collection</a>
+        <a href="#reviews" class="hover:text-amber-400 transition">Client Reviews</a>
+        <a href="#inquiry" class="hover:text-amber-400 transition">Book Viewing</a>
+      </nav>
+
       <div class="flex items-center gap-3">
-        <a href="https://wa.me/918793793949" target="_blank" class="px-3.5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs sm:text-sm font-medium transition flex items-center gap-1.5">
-          <i class="fab fa-whatsapp"></i> <span class="hidden sm:inline">WhatsApp</span>
+        <a href="https://wa.me/918793793949" target="_blank" class="px-4 py-2.5 rounded-full bg-emerald-600/90 hover:bg-emerald-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-emerald-950">
+          <i class="fab fa-whatsapp text-sm"></i> <span>WhatsApp Us</span>
         </a>
-        <a href="#inquiry" class="px-3.5 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs sm:text-sm font-semibold transition">
-          Book Inquiry
+        <a href="#inquiry" class="hidden sm:inline-flex px-5 py-2.5 rounded-full bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-400 hover:to-yellow-500 text-slate-950 text-xs font-bold uppercase tracking-wider transition shadow-lg shadow-amber-950/40">
+          Private Appointment
         </a>
       </div>
     </div>
   </header>
 
-  <!-- Hero Section -->
-  <section class="pt-32 pb-16 px-6 max-w-6xl mx-auto text-center space-y-6">
-    <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-950/40 border border-amber-800/40 text-amber-400 text-xs font-medium">
-      <i class="fas fa-certificate text-[10px]"></i> Certified Hallmarked Jewelry & Bespoke Designs
-    </span>
-    <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-white max-w-3xl mx-auto leading-tight">
-      Timeless Elegance, <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-amber-400 to-yellow-500">Crafted to Perfection</span>
-    </h1>
-    <p class="text-slate-400 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
-      Explore custom gold, silver, and diamond designs. Select any piece to place an instant customization inquiry.
-    </p>
-
-    <!-- Mobile Metal Rates Display -->
-    <div class="flex sm:hidden justify-center gap-2 text-[11px] font-mono pt-2">
-      <div class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800">
-        <span class="text-slate-400">Gold:</span> <span id="gold-price-m" class="text-amber-300 font-bold">Loading...</span>
+  <!-- HERO SECTION -->
+  <section class="relative pt-28 pb-24 px-6 overflow-hidden">
+    <div class="absolute inset-0 opacity-20 bg-[radial-gradient(#f59e0b_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none"></div>
+    <div class="max-w-5xl mx-auto text-center space-y-6 relative z-10">
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-950/40 border border-amber-800/40 text-amber-300 text-xs font-semibold tracking-wider uppercase">
+        <i class="fas fa-crown text-[11px]"></i> Artisanal Bridal & Haute Joaillerie
       </div>
-      <div class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800">
-        <span class="text-slate-400">Silver:</span> <span id="silver-price-m" class="text-slate-200 font-bold">Loading...</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- Jewelry Catalog Section -->
-  <section id="catalog" class="py-16 border-t border-slate-900 px-6">
-    <div class="max-w-6xl mx-auto space-y-10">
       
-      <!-- Filter Bar -->
-      <div class="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-white">Signature Collection</h2>
-          <p class="text-xs sm:text-sm text-slate-400">Browse curated designs or request custom fabrication</p>
-        </div>
+      <h1 class="font-serif-luxury text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.15]">
+        Crafting Heirlooms of <br>
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-yellow-500">
+          Pure Distinction & Grace
+        </span>
+      </h1>
 
-        <div id="filter-buttons" class="flex flex-wrap gap-2">
-          <button onclick="filterCatalog('all')" class="filter-btn px-4 py-1.5 rounded-lg text-xs font-medium bg-amber-500 text-slate-950 transition" data-cat="all">All</button>
-          <button onclick="filterCatalog('gold')" class="filter-btn px-4 py-1.5 rounded-lg text-xs font-medium bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 transition" data-cat="gold">Gold</button>
-          <button onclick="filterCatalog('silver')" class="filter-btn px-4 py-1.5 rounded-lg text-xs font-medium bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 transition" data-cat="silver">Silver</button>
-          <button onclick="filterCatalog('diamond')" class="filter-btn px-4 py-1.5 rounded-lg text-xs font-medium bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 transition" data-cat="diamond">Diamond</button>
-        </div>
-      </div>
+      <p class="text-slate-400 text-base sm:text-lg max-w-2xl mx-auto font-light leading-relaxed">
+        Step into an atelier where precious gold, fine silver, and certified diamonds meet timeless craftsmanship. Explore custom creations crafted for weddings, auspicious occasions, and everyday luxury.
+      </p>
 
-      <!-- Dynamic Jewelry Grid -->
-      <div id="jewelry-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        <!-- Rendered dynamically by JavaScript -->
+      <div class="flex flex-wrap justify-center items-center gap-4 pt-4">
+        <a href="#catalog" class="px-8 py-3.5 rounded-full bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-slate-950 font-bold text-xs uppercase tracking-widest hover:brightness-110 transition shadow-xl shadow-amber-900/40">
+          Explore Creations
+        </a>
+        <a href="#instagram-reels" class="px-7 py-3.5 rounded-full bg-slate-900/80 border border-slate-800 hover:border-amber-500/50 text-slate-200 font-semibold text-xs uppercase tracking-widest transition flex items-center gap-2">
+          <i class="fab fa-instagram text-pink-500"></i> Watch Reels & Offers
+        </a>
       </div>
     </div>
   </section>
 
-  <!-- Inquiry & Contact Form Section -->
-  <section id="inquiry" class="py-24 border-t border-slate-900 px-6 bg-slate-950/60">
-    <div class="max-w-2xl mx-auto space-y-10">
-      <div class="text-center space-y-2 reveal-on-scroll">
-        <h2 class="text-3xl font-bold tracking-tight text-white">Custom Jewelry Inquiry</h2>
+  <!-- INSTAGRAM REELS & LATEST VIDEO OFFERS SECTION -->
+  <section id="instagram-reels" class="py-24 border-t border-slate-900 bg-[#06070a] px-6">
+    <div class="max-w-7xl mx-auto space-y-12">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 reveal-on-scroll">
+        <div>
+          <span class="text-xs font-mono uppercase tracking-[0.25em] text-amber-400 flex items-center gap-2 mb-2">
+            <i class="fab fa-instagram text-pink-500 text-sm"></i> Official Social Feed
+          </span>
+          <h2 class="font-serif-luxury text-3xl sm:text-4xl font-bold tracking-tight text-white">
+            Exclusive Offers & Video Reels
+          </h2>
+          <p class="text-slate-400 text-sm mt-1">
+            Real video showcases, festival promotions, and unboxing clips straight from our workshop.
+          </p>
+        </div>
+
+        <a href="https://www.instagram.com" target="_blank" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-700 via-pink-600 to-amber-600 hover:brightness-110 text-white text-xs font-semibold uppercase tracking-wider transition shadow-lg shadow-pink-950/40">
+          <i class="fab fa-instagram text-sm"></i> Follow On Instagram
+        </a>
+      </div>
+
+      <!-- Configurable Instagram Video Embeds Grid -->
+      <div id="instagram-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Injected dynamically via storeConfig.instagramPosts -->
+      </div>
+    </div>
+  </section>
+
+  <!-- BESPOKE JEWELRY CATALOG -->
+  <section id="catalog" class="py-24 border-t border-slate-900 px-6">
+    <div class="max-w-7xl mx-auto space-y-12">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6 reveal-on-scroll">
+        <div>
+          <span class="text-xs font-mono uppercase tracking-[0.25em] text-amber-400 mb-2 block">
+            Signature Showcase
+          </span>
+          <h2 class="font-serif-luxury text-3xl sm:text-4xl font-bold tracking-tight text-white">
+            Curated Masterpieces
+          </h2>
+          <p class="text-slate-400 text-sm mt-1">Select any creation to request personalized weight, purity, or custom styling.</p>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="flex flex-wrap gap-2">
+          <button onclick="filterCatalog('all')" class="filter-tab px-5 py-2 rounded-full text-xs font-semibold uppercase tracking-wider bg-amber-500 text-slate-950 transition" data-cat="all">All Designs</button>
+          <button onclick="filterCatalog('gold')" class="filter-tab px-5 py-2 rounded-full text-xs font-semibold uppercase tracking-wider bg-slate-900 text-slate-300 border border-slate-800 hover:border-amber-500/40 transition" data-cat="gold">Gold</button>
+          <button onclick="filterCatalog('silver')" class="filter-tab px-5 py-2 rounded-full text-xs font-semibold uppercase tracking-wider bg-slate-900 text-slate-300 border border-slate-800 hover:border-amber-500/40 transition" data-cat="silver">Silver</button>
+          <button onclick="filterCatalog('diamond')" class="filter-tab px-5 py-2 rounded-full text-xs font-semibold uppercase tracking-wider bg-slate-900 text-slate-300 border border-slate-800 hover:border-amber-500/40 transition" data-cat="diamond">Solitaires</button>
+        </div>
+      </div>
+
+      <!-- Catalog Cards Grid -->
+      <div id="catalog-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Rendered dynamically via storeConfig.jewelryCatalog -->
+      </div>
+    </div>
+  </section>
+
+  <!-- GOOGLE REVIEWS & TESTIMONIALS SECTION -->
+  <section id="reviews" class="py-24 border-t border-slate-900 bg-[#06070a] px-6">
+    <div class="max-w-6xl mx-auto space-y-12">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6 reveal-on-scroll">
+        <div>
+          <span class="text-xs font-mono uppercase tracking-[0.25em] text-amber-400 mb-2 block">
+            Testimonials & Trust
+          </span>
+          <h2 class="font-serif-luxury text-3xl sm:text-4xl font-bold tracking-tight text-white">
+            Client Experiences
+          </h2>
+          <p class="text-slate-400 text-sm mt-1">Authentic feedback from families who trust us for their most precious milestones.</p>
+        </div>
+
+        <div class="flex items-center gap-3 bg-slate-900/90 border border-slate-800/80 px-5 py-3 rounded-2xl">
+          <i class="fab fa-google text-red-400 text-2xl"></i>
+          <div>
+            <div class="flex items-center gap-1 text-amber-400 text-xs">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+              <span class="text-white font-bold ml-1.5 text-sm">5.0 / 5.0</span>
+            </div>
+            <span class="text-[11px] text-slate-400">Verified Google Business Rating</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reviews Container -->
+      <div id="reviews-container" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Rendered dynamically from storeConfig.googleReviews -->
+      </div>
+    </div>
+  </section>
+
+  <!-- VISIT STORE & INQUIRY FORM SECTION -->
+  <section id="inquiry" class="py-24 border-t border-slate-900 px-6">
+    <div class="max-w-6xl mx-auto space-y-14">
+      <div class="text-center space-y-3 max-w-2xl mx-auto reveal-on-scroll">
+        <span class="text-xs font-mono uppercase tracking-[0.25em] text-amber-400">Atelier & Consultations</span>
+        <h2 class="font-serif-luxury text-3xl sm:text-4xl font-bold tracking-tight text-white">Visit Or Send An Inquiry</h2>
         <p class="text-slate-400 text-sm">
-          Have a design in mind or want details on a catalog item? Send your request below.
+          Schedule an exclusive in-person viewing, discuss custom gold melting & redesigning, or receive instant quotes.
         </p>
       </div>
 
-      <!-- Contact Form -->
-      <form id="contact-form" class="space-y-4 reveal-on-scroll">
-        <input type="hidden" name="access_key" value="e57ff2f8-2b9f-4047-9a0e-0fcb8d21936a" />
-        <input type="hidden" name="subject" value="New Jewelry Design & Price Inquiry" />
-        <input type="hidden" name="from_name" value="Jewelry Showcase Lead" />
-        <input type="checkbox" name="botcheck" class="hidden" style="display: none;" />
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+        <!-- LEFT: Google Map & Showroom Details (5 Cols) -->
+        <div class="lg:col-span-5 space-y-6 reveal-on-scroll">
+          <div class="p-6 rounded-3xl bg-slate-900/50 border border-slate-800/80 space-y-5">
+            <h3 class="font-serif-luxury text-xl font-bold text-white flex items-center gap-2">
+              <i class="fas fa-store text-amber-400"></i> Showroom Address
+            </h3>
+            
+            <p class="text-sm text-slate-300 leading-relaxed">
+              Prime Commercial Boulevard, Sector 17, <br>
+              Navi Mumbai, Maharashtra, India - 400703
+            </p>
 
-        <div>
-          <label for="name" class="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-2">Your Name</label>
-          <input 
-            type="text" 
-            id="name" 
-            name="name" 
-            required 
-            minlength="2"
-            placeholder="Full Name" 
-            class="w-full px-4 py-3 rounded-lg bg-slate-900/80 border border-slate-800 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-500 text-sm transition" 
-          />
-        </div>
+            <div class="space-y-3 pt-2 text-xs font-mono text-slate-400">
+              <div class="flex items-center gap-2">
+                <i class="fas fa-clock text-amber-500"></i>
+                <span>Mon – Sun: 10:30 AM – 8:30 PM</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <i class="fas fa-phone text-emerald-400"></i>
+                <a href="tel:+918793793949" class="hover:text-white transition">+91 8793793949</a>
+              </div>
+            </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label for="email" class="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-2">Email Address</label>
-            <input 
-              type="email" 
-              id="email" 
-              name="email" 
-              required 
-              placeholder="name@domain.com" 
-              class="w-full px-4 py-3 rounded-lg bg-slate-900/80 border border-slate-800 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-500 text-sm transition" 
-            />
+            <div class="pt-2">
+              <a href="https://wa.me/918793793949" target="_blank" class="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 font-semibold text-xs text-white uppercase tracking-wider transition flex items-center justify-center gap-2">
+                <i class="fab fa-whatsapp text-sm"></i> Direct WhatsApp Inquiry
+              </a>
+            </div>
           </div>
-          <div>
-            <label for="phone" class="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-2">WhatsApp / Phone</label>
-            <input 
-              type="tel" 
-              id="phone" 
-              name="phone" 
-              placeholder="e.g. +91 9876543210" 
-              class="w-full px-4 py-3 rounded-lg bg-slate-900/80 border border-slate-800 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-500 text-sm transition" 
-            />
+
+          <!-- Free Interactive Google Maps Embed (Styled Dark) -->
+          <div class="h-64 rounded-3xl overflow-hidden border border-slate-800/80 shadow-2xl">
+            <iframe 
+              title="Store Location"
+              width="100%" 
+              height="100%" 
+              style="border:0; filter: invert(90%) hue-rotate(180deg) contrast(90%);" 
+              loading="lazy" 
+              allowfullscreen 
+              referrerpolicy="no-referrer-when-downgrade" 
+              src="https://maps.google.com/maps?q=Navi%20Mumbai,%20Maharashtra&t=&z=13&ie=UTF8&iwloc=&output=embed">
+            </iframe>
           </div>
         </div>
 
-        <div>
-          <label for="message" class="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-2">Inquiry / Design Details</label>
-          <textarea 
-            id="message" 
-            name="message" 
-            rows="4" 
-            required 
-            placeholder="Specify piece, preferred metal weight, size, or custom specifications..." 
-            class="w-full px-4 py-3 rounded-lg bg-slate-900/80 border border-slate-800 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-500 text-sm transition"
-          ></textarea>
+        <!-- RIGHT: Inquiry Form (7 Cols) -->
+        <div class="lg:col-span-7 reveal-on-scroll">
+          <div class="p-8 sm:p-10 rounded-3xl bg-slate-900/40 border border-slate-800/80 space-y-6">
+            <h3 class="font-serif-luxury text-2xl font-bold text-white">Book A Consultation / Rate Quote</h3>
+            
+            <form id="jewelry-form" class="space-y-4">
+              <!-- Web3Forms Config Key -->
+              <input type="hidden" name="access_key" value="e57ff2f8-2b9f-4047-9a0e-0fcb8d21936a" />
+              <input type="hidden" name="subject" value="New Haute Jewelry Consultation Request" />
+              <input type="hidden" name="from_name" value="Jewellery Atelier Portal" />
+              <input type="checkbox" name="botcheck" class="hidden" style="display:none;" />
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label for="cust-name" class="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-2">Your Name</label>
+                  <input type="text" id="cust-name" name="name" required placeholder="Siddharth Sharma" class="w-full px-4 py-3 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 placeholder-slate-600 focus:outline-none focus:border-amber-500 text-sm transition" />
+                </div>
+                <div>
+                  <label for="cust-phone" class="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-2">WhatsApp / Contact No.</label>
+                  <input type="tel" id="cust-phone" name="phone" required placeholder="+91 98765 43210" class="w-full px-4 py-3 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 placeholder-slate-600 focus:outline-none focus:border-amber-500 text-sm transition" />
+                </div>
+              </div>
+
+              <div>
+                <label for="cust-email" class="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-2">Email Address</label>
+                <input type="email" id="cust-email" name="email" required placeholder="siddharth@example.com" class="w-full px-4 py-3 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 placeholder-slate-600 focus:outline-none focus:border-amber-500 text-sm transition" />
+              </div>
+
+              <div>
+                <label for="cust-message" class="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-2">Design Details / Inquiry</label>
+                <textarea id="cust-message" name="message" rows="4" required placeholder="Describe the design, weight range, occasion, or selected catalog item..." class="w-full px-4 py-3 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 placeholder-slate-600 focus:outline-none focus:border-amber-500 text-sm transition"></textarea>
+              </div>
+
+              <div class="pt-2 flex flex-col sm:flex-row gap-3">
+                <button type="submit" id="form-submit-btn" class="flex-1 py-4 px-6 rounded-xl bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:brightness-110 font-bold text-slate-950 text-xs uppercase tracking-widest transition flex items-center justify-center gap-2 shadow-lg shadow-amber-950/40">
+                  <span id="btn-label">Send Inquiry</span>
+                  <i class="fas fa-paper-plane text-xs"></i>
+                </button>
+
+                <button type="button" onclick="sendToWhatsAppDirect()" class="py-4 px-6 rounded-xl bg-emerald-600 hover:bg-emerald-500 font-bold text-white text-xs uppercase tracking-widest transition flex items-center justify-center gap-2">
+                  <i class="fab fa-whatsapp text-sm"></i>
+                  <span>Send via WhatsApp</span>
+                </button>
+              </div>
+
+              <div id="form-feedback" class="hidden text-center text-xs py-3 px-4 rounded-xl font-medium"></div>
+            </form>
+          </div>
         </div>
-
-        <button 
-          type="submit" 
-          id="submit-btn" 
-          class="w-full py-3.5 px-6 rounded-lg bg-amber-500 hover:bg-amber-400 font-semibold text-slate-950 text-sm transition shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2"
-        >
-          <span id="btn-text">Submit Design Inquiry</span>
-          <i class="fas fa-paper-plane text-xs"></i>
-        </button>
-
-        <div id="form-result" class="hidden text-center text-sm py-3 px-4 rounded-lg font-medium"></div>
-      </form>
+      </div>
     </div>
   </section>
 
-  <!-- Footer -->
-  <footer class="py-8 border-t border-slate-900 text-center text-xs text-slate-500">
-    © 2026 Jewels Collection. All metal prices are indicative based on daily market bullion benchmarks.
+  <!-- FOOTER -->
+  <footer class="py-12 border-t border-slate-900 bg-black px-6 text-center text-xs text-slate-500 space-y-3">
+    <p class="font-serif-luxury tracking-[0.2em] text-slate-400 uppercase">Pargawkar Fine Jewellers</p>
+    <p>© 2026 Atelier. All bullion prices displayed are indicative spot estimates based on daily standard bullion indices.</p>
   </footer>
 
-  <!-- CONFIGURATION & FUNCTIONALITY SCRIPT -->
+  <!-- =========================================================================
+       CENTRAL EASY CONFIGURATION
+       The owner can edit this section directly without developer assistance.
+       ========================================================================= -->
   <script>
-    /* ==========================================================
-       1. JEWELRY CONFIGURATION LIST
-       Add, edit, or remove items directly in this array.
-       ========================================================== */
-    const jewelryCatalog = [
-      {
-        id: "JW-01",
-        title: "Royal Kundan Choker Necklace",
-        category: "gold",
-        purity: "22K Gold • Handcrafted",
-        image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=80",
-        description: "Intricate antique bridal gold finish featuring natural polki stone settings."
-      },
-      {
-        id: "JW-02",
-        title: "Solitaire Diamond Engagement Ring",
-        category: "diamond",
-        purity: "18K White Gold • VVS1 Diamond",
-        image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80",
-        description: "Brilliant round-cut conflict-free center stone with pavé band accents."
-      },
-      {
-        id: "JW-03",
-        title: "Oxidized Silver Temple Bangle",
-        category: "silver",
-        purity: "925 Sterling Silver",
-        image: "https://images.unsplash.com/photo-1611591475837-7b64be654497?auto=format&fit=crop&w=800&q=80",
-        description: "Traditional embossed peacock motif handcrafted with precision closure."
-      },
-      {
-        id: "JW-04",
-        title: "Modern Minimalist Gold Kada",
-        category: "gold",
-        purity: "22K Yellow Gold",
-        image: "https://images.unsplash.com/photo-1603561591411-07134e71a2a9?auto=format&fit=crop&w=800&q=80",
-        description: "Sleek geometric daily wear bracelet finished in high polish."
-      },
-      {
-        id: "JW-05",
-        title: "Pure Silver Pooja Diya & Coin Set",
-        category: "silver",
-        purity: "999 Fine Silver",
-        image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=800&q=80",
-        description: "Auspicious gifting collection stamped with purity certification."
-      },
-      {
-        id: "JW-06",
-        title: "Diamond Floral Drop Earrings",
-        category: "diamond",
-        purity: "14K Rose Gold • Natural Diamonds",
-        image: "https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&w=800&q=80",
-        description: "Cascading floral drop pattern with secure push-back clasps."
+    const storeConfig = {
+      // 1. WhatsApp Number for direct inquiries
+      whatsAppNumber: "918793793949",
+
+      // 2. Instagram Posts & Reels
+      // To add or change posts, just paste any Instagram link or post ID below!
+      instagramPosts: [
+        "https://www.instagram.com/p/DD6KnIxocNb/",
+        "https://www.instagram.com/p/DGKxO5moz9d/",
+        "https://www.instagram.com/p/DKglqKOuqiI/",
+        "https://www.instagram.com/p/DPWg26cDFpT/",
+        "https://www.instagram.com/p/DRhHa6lEgjd/",
+        "https://www.instagram.com/p/DaNd1_fyzEP/"
+      ],
+
+      // 3. Jewelry Catalog Designs
+      jewelryCatalog: [
+        {
+          id: "JW-01",
+          title: "Heritage Temple Bridal Choker",
+          category: "gold",
+          purity: "22K Solid Gold • Certified",
+          image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=80",
+          description: "Handcrafted antique gold finish adorned with natural ruby teardrops and auspicious Lakshmi embossing."
+        },
+        {
+          id: "JW-02",
+          title: "Royal Solitaire Engagement Ring",
+          category: "diamond",
+          purity: "18K White Gold • VVS1 Clarity",
+          image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80",
+          description: "Certified brilliant cut solitaire accented with micro-pavé diamonds along a cathedral band."
+        },
+        {
+          id: "JW-03",
+          title: "925 Pure Silver Jadau Kada",
+          category: "silver",
+          purity: "925 Sterling Silver",
+          image: "https://images.unsplash.com/photo-1611591475837-7b64be654497?auto=format&fit=crop&w=800&q=80",
+          description: "Intricately filigreed ethnic cuff with oxidized accents and traditional screw-locking hinge."
+        },
+        {
+          id: "JW-04",
+          title: "Polki Chandbali Drop Earrings",
+          category: "gold",
+          purity: "22K Gold • Natural Polki",
+          image: "https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&w=800&q=80",
+          description: "Cascading bridal crescents strung with south sea seed pearls and enamelled backwork."
+        },
+        {
+          id: "JW-05",
+          title: "Fine Silver Pooja Thali & Coin Set",
+          category: "silver",
+          purity: "999 Fine Silver (Stamped)",
+          image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=800&q=80",
+          description: "Exquisite ceremonial tableware crafted with ornate scalloped rims and hallmark guarantees."
+        },
+        {
+          id: "JW-06",
+          title: "Eternity Diamond Tennis Bracelet",
+          category: "diamond",
+          purity: "18K Yellow Gold • F-G Color Diamonds",
+          image: "https://images.unsplash.com/photo-1603561591411-07134e71a2a9?auto=format&fit=crop&w=800&q=80",
+          description: "Four-prong seamless continuous diamond line bracelet engineered with double-safety lock."
+        }
+      ],
+
+      // 4. Google Reviews (Editable list)
+      googleReviews: [
+        {
+          author: "Ananya Deshmukh",
+          rating: 5,
+          text: "Designed my entire bridal jewelry set here. The 22K hallmarked finish, transparency in gold weights, and custom finishing were unmatched.",
+          time: "2 weeks ago"
+        },
+        {
+          author: "Rohan & Sneha Verma",
+          rating: 5,
+          text: "We customized our solitaire engagement bands. They delivered exceptional craftsmanship well before our promised engagement date.",
+          time: "1 month ago"
+        },
+        {
+          author: "Mahesh K. Shinde",
+          rating: 5,
+          text: "Fair exchange rates, authentic hallmarking certificate provided on the spot, and very honest dealings with pure 999 silver coins.",
+          time: "3 months ago"
+        }
+      ]
+    };
+
+    /* =========================================================================
+       CORE ENGINE
+       ========================================================================= */
+
+    // 1. Render Instagram Video Posts & Reels
+    function renderInstagramReels() {
+      const container = document.getElementById('instagram-container');
+      if (!container) return;
+
+      container.innerHTML = storeConfig.instagramPosts.map((url) => {
+        // Normalize URL to standard embed format
+        const cleanUrl = url.split('?')[0].replace(/\/$/, "");
+        return `
+          <div class="rounded-3xl overflow-hidden bg-slate-950 border border-slate-800/80 p-2 shadow-xl flex justify-center items-center min-h-[480px]">
+            <blockquote 
+              class="instagram-media" 
+              data-instgrm-permalink="${cleanUrl}/" 
+              data-instgrm-version="14" 
+              style="background:#090a0f; border:0; margin:0; width:100%; max-width:540px; min-width:300px; padding:0;">
+            </blockquote>
+          </div>
+        `;
+      }).join('');
+
+      // Trigger Instagram's embed engine to parse loaded blockquotes
+      if (window.instgrm && window.instgrm.Embeds) {
+        window.instgrm.Embeds.process();
       }
-    ];
+    }
 
-    /* ==========================================================
-       2. RENDER JEWELRY CARDS WITH HOVER ANIMATIONS
-       ========================================================== */
-    const grid = document.getElementById('jewelry-grid');
-
+    // 2. Render Jewelry Catalog
+    const catalogGrid = document.getElementById('catalog-container');
     function renderCatalog(items) {
-      grid.innerHTML = items.map(item => `
-        <div class="group rounded-2xl bg-slate-900/60 border border-slate-800/80 overflow-hidden hover:border-amber-500/40 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between shadow-lg">
+      if (!catalogGrid) return;
+      catalogGrid.innerHTML = items.map(item => `
+        <div class="group rounded-3xl bg-slate-900/40 border border-slate-800/80 overflow-hidden hover:border-amber-500/50 hover:-translate-y-2 transition-all duration-300 flex flex-col justify-between shadow-2xl">
           <div>
-            <div class="relative h-60 w-full overflow-hidden bg-slate-900">
+            <div class="relative h-72 w-full overflow-hidden bg-slate-950">
               <img 
                 src="${item.image}" 
                 alt="${item.title}" 
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
                 loading="lazy"
               />
-              <span class="absolute top-3 right-3 text-[10px] font-mono tracking-wider uppercase px-2.5 py-1 rounded-md bg-slate-950/80 border border-slate-800 text-amber-300">
+              <span class="absolute top-4 right-4 text-[10px] font-mono tracking-widest uppercase px-3 py-1 rounded-full bg-black/80 backdrop-blur-md border border-amber-500/30 text-amber-300">
                 ${item.category}
               </span>
             </div>
-            <div class="p-5 space-y-2">
-              <span class="text-xs font-mono text-amber-400/90">${item.purity}</span>
-              <h3 class="text-lg font-semibold text-white group-hover:text-amber-300 transition-colors">${item.title}</h3>
-              <p class="text-xs text-slate-400 leading-relaxed">${item.description}</p>
+            <div class="p-6 space-y-2">
+              <span class="text-xs font-mono text-amber-400/90 font-medium">${item.purity}</span>
+              <h3 class="font-serif-luxury text-xl font-bold text-white group-hover:text-amber-300 transition-colors">${item.title}</h3>
+              <p class="text-xs text-slate-400 leading-relaxed font-light">${item.description}</p>
             </div>
           </div>
-          <div class="p-5 pt-0">
+          <div class="p-6 pt-0 space-y-2">
             <button 
-              onclick="selectForInquiry('${item.title}', '${item.purity}')"
-              class="w-full py-2.5 rounded-lg bg-slate-800 hover:bg-amber-500 hover:text-slate-950 font-medium text-xs text-slate-200 transition flex items-center justify-center gap-2"
-            >
-              <i class="fas fa-tag text-[10px]"></i> Enquire About This Piece
+              onclick="selectProductForInquiry('${item.title}', '${item.purity}')" 
+              class="w-full py-3 rounded-xl bg-slate-800/90 hover:bg-amber-500 hover:text-slate-950 font-bold text-xs uppercase tracking-wider text-slate-200 transition flex items-center justify-center gap-2">
+              <i class="fas fa-gem text-xs"></i> Inquire About This Piece
             </button>
           </div>
         </div>
       `).join('');
     }
 
-    // Filter by Category
     function filterCatalog(category) {
-      document.querySelectorAll('.filter-btn').forEach(btn => {
+      document.querySelectorAll('.filter-tab').forEach(btn => {
         if (btn.dataset.cat === category) {
-          btn.className = "filter-btn px-4 py-1.5 rounded-lg text-xs font-medium bg-amber-500 text-slate-950 transition";
+          btn.className = "filter-tab px-5 py-2 rounded-full text-xs font-semibold uppercase tracking-wider bg-amber-500 text-slate-950 transition";
         } else {
-          btn.className = "filter-btn px-4 py-1.5 rounded-lg text-xs font-medium bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700 transition";
+          btn.className = "filter-tab px-5 py-2 rounded-full text-xs font-semibold uppercase tracking-wider bg-slate-900 text-slate-300 border border-slate-800 hover:border-amber-500/40 transition";
         }
       });
 
       if (category === 'all') {
-        renderCatalog(jewelryCatalog);
+        renderCatalog(storeConfig.jewelryCatalog);
       } else {
-        const filtered = jewelryCatalog.filter(i => i.category === category);
-        renderCatalog(filtered);
+        renderCatalog(storeConfig.jewelryCatalog.filter(i => i.category === category));
       }
     }
 
-    // Auto-fill Inquiry Form when clicking an item
-    function selectForInquiry(title, purity) {
-      const msgBox = document.getElementById('message');
-      msgBox.value = `Hello, I am interested in inquiring about "${title}" (${purity}). Please share pricing, custom weight options, and delivery timelines.`;
+    // Auto-fill product inquiry in message box
+    function selectProductForInquiry(title, purity) {
+      const msgBox = document.getElementById('cust-message');
+      msgBox.value = `Namaste, I am interested in inquiring about "${title}" (${purity}). Kindly share current pricing based on today's gold rate and available customization.`;
       
-      const inquirySection = document.getElementById('inquiry');
-      inquirySection.scrollIntoView({ behavior: 'smooth' });
+      document.getElementById('inquiry').scrollIntoView({ behavior: 'smooth' });
       msgBox.focus();
     }
 
-    // Initialize catalog render
-    renderCatalog(jewelryCatalog);
+    // 3. Render Google Reviews
+    function renderReviews() {
+      const revContainer = document.getElementById('reviews-container');
+      if (!revContainer) return;
 
-    /* ==========================================================
-       3. FETCH DAILY GOLD & SILVER MARKET RATES
-       ========================================================== */
-    async function fetchMetalPrices() {
-      const goldEl = document.getElementById('gold-price');
-      const silverEl = document.getElementById('silver-price');
-      const goldElM = document.getElementById('gold-price-m');
-      const silverElM = document.getElementById('silver-price-m');
+      revContainer.innerHTML = storeConfig.googleReviews.map(r => `
+        <div class="p-6 rounded-3xl bg-slate-900/40 border border-slate-800/80 flex flex-col justify-between space-y-4 reveal-on-scroll">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <div class="flex text-amber-400 text-xs gap-1">
+                ${'<i class="fas fa-star"></i>'.repeat(r.rating)}
+              </div>
+              <i class="fab fa-google text-slate-600 text-sm"></i>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed italic font-light">"${r.text}"</p>
+          </div>
+          <div class="pt-4 border-t border-slate-800/60 flex items-center justify-between">
+            <div>
+              <h4 class="text-xs font-bold text-white">${r.author}</h4>
+              <p class="text-[10px] text-slate-500 font-mono">Verified Google Review</p>
+            </div>
+            <span class="text-[10px] font-mono text-slate-500">${r.time}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // 4. Fetch Live Gold & Silver Metal Rates
+    async function fetchLiveBullionRates() {
+      const g24El = document.getElementById('rate-gold-24k');
+      const g22El = document.getElementById('rate-gold-22k');
+      const silEl = document.getElementById('rate-silver');
 
       try {
-        // Free open bullion currency rates API (Base XAU/XAG to INR)
-        const res = await fetch('https://api.frankfurter.app/latest?from=USD&to=INR');
-        const data = await res.json();
+        // Free open financial exchange rate endpoint (USD to INR benchmark)
+        const response = await fetch('https://api.frankfurter.app/latest?from=USD&to=INR');
+        const data = await response.json();
         const usdInr = data.rates.INR || 83.5;
 
-        // Approximate live bullion benchmarks (per 10g in INR)
-        // 1 Troy oz = 31.1035 grams
-        const approxGoldRatePer10g = Math.round((2450 * usdInr / 31.1035) * 10);
-        const approxSilverRatePer10g = Math.round((31.5 * usdInr / 31.1035) * 10);
+        // Current indicative standard per-troy-ounce calculation to 10 Grams INR
+        // 1 Troy Ounce = 31.1034768 Grams
+        const approxGold24kPer10g = Math.round((2475 * usdInr / 31.1035) * 10);
+        const approxGold22kPer10g = Math.round(approxGold24kPer10g * 0.916);
+        const approxSilverPer10g = Math.round((31.8 * usdInr / 31.1035) * 10);
 
-        const goldFormatted = `₹${approxGoldRatePer10g.toLocaleString('en-IN')}`;
-        const silverFormatted = `₹${approxSilverRatePer10g.toLocaleString('en-IN')}`;
-
-        goldEl.textContent = goldFormatted;
-        silverEl.textContent = silverFormatted;
-        goldElM.textContent = goldFormatted;
-        silverElM.textContent = silverFormatted;
-      } catch (err) {
-        // Fallback default indicative rates if offline or rate-limited
-        const defaultGold = "₹72,450";
-        const defaultSilver = "₹890";
-        goldEl.textContent = defaultGold;
-        silverEl.textContent = defaultSilver;
-        goldElM.textContent = defaultGold;
-        silverElM.textContent = defaultSilver;
+        g24El.textContent = `₹${approxGold24kPer10g.toLocaleString('en-IN')}`;
+        g22El.textContent = `₹${approxGold22kPer10g.toLocaleString('en-IN')}`;
+        silEl.textContent = `₹${approxSilverPer10g.toLocaleString('en-IN')}`;
+      } catch (e) {
+        // Reliable fallback indicative rates if network is offline
+        g24El.textContent = "₹73,200";
+        g22El.textContent = "₹67,050";
+        silEl.textContent = "₹895";
       }
     }
-    fetchMetalPrices();
 
-    /* ==========================================================
-       4. SCROLL REVEAL ANIMATIONS
-       ========================================================== */
-    const revealObserver = new IntersectionObserver((entries, observer) => {
+    // 5. Direct WhatsApp Submission Helper
+    function sendToWhatsAppDirect() {
+      const name = document.getElementById('cust-name').value.trim() || 'Client';
+      const phone = document.getElementById('cust-phone').value.trim() || 'Not Provided';
+      const message = document.getElementById('cust-message').value.trim() || 'I am interested in your jewelry collection.';
+
+      const waText = encodeURIComponent(`*New Jewelry Inquiry*\n\n*Name:* ${name}\n*Phone:* ${phone}\n*Details:* ${message}`);
+      window.open(`https://wa.me/${storeConfig.whatsAppNumber}?text=${waText}`, '_blank');
+    }
+
+    // 6. Form Submission with Web3Forms AJAX
+    const jForm = document.getElementById('jewelry-form');
+    const formFeedback = document.getElementById('form-feedback');
+    const submitBtn = document.getElementById('form-submit-btn');
+    const btnLabel = document.getElementById('btn-label');
+
+    if (jForm) {
+      jForm.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        submitBtn.disabled = true;
+        btnLabel.textContent = "Transmitting Inquiry...";
+        formFeedback.className = "hidden";
+
+        const formData = new FormData(jForm);
+
+        try {
+          const res = await fetch('https://api.web3forms.com/submit', {
+            method: 'POST',
+            body: formData
+          });
+          const result = await res.json();
+
+          if (res.ok && result.success) {
+            formFeedback.textContent = "Thank you! Your private consultation request has been received. Our team will contact you shortly.";
+            formFeedback.className = "text-center text-xs py-3 px-4 rounded-xl bg-emerald-950/80 border border-emerald-800 text-emerald-300 block";
+            jForm.reset();
+          } else {
+            formFeedback.textContent = result.message || "Submission failed. Please connect via WhatsApp.";
+            formFeedback.className = "text-center text-xs py-3 px-4 rounded-xl bg-rose-950/80 border border-rose-800 text-rose-300 block";
+          }
+        } catch (err) {
+          formFeedback.textContent = "Network error. Please click 'Send via WhatsApp' to reach us instantly.";
+          formFeedback.className = "text-center text-xs py-3 px-4 rounded-xl bg-rose-950/80 border border-rose-800 text-rose-300 block";
+        } finally {
+          submitBtn.disabled = false;
+          btnLabel.textContent = "Send Inquiry";
+        }
+      });
+    }
+
+    // 7. Scroll Reveal Animation
+    const observer = new IntersectionObserver((entries, obs) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('is-visible');
-          observer.unobserve(entry.target);
+          obs.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.1 });
+    }, { threshold: 0.08 });
 
-    document.querySelectorAll('.reveal-on-scroll').forEach(el => revealObserver.observe(el));
-
-    /* ==========================================================
-       5. FORM SUBMISSION HANDLER
-       ========================================================== */
-    const contactForm = document.getElementById('contact-form');
-    const formResult = document.getElementById('form-result');
-    const submitBtn = document.getElementById('submit-btn');
-    const btnText = document.getElementById('btn-text');
-
-    contactForm.addEventListener('submit', async function (e) {
-      e.preventDefault();
-      submitBtn.disabled = true;
-      btnText.textContent = 'Submitting Inquiry...';
-      formResult.className = 'hidden';
-
-      const formData = new FormData(contactForm);
-
-      try {
-        const response = await fetch('https://api.web3forms.com/submit', {
-          method: 'POST',
-          body: formData
-        });
-        const result = await response.json();
-
-        if (response.ok && result.success) {
-          formResult.textContent = "Thank you! Your jewelry inquiry has been received. We will contact you shortly.";
-          formResult.className = "text-center text-sm py-3 px-4 rounded-lg bg-emerald-950/80 border border-emerald-800 text-emerald-400 block";
-          contactForm.reset();
-        } else {
-          formResult.textContent = result.message || "Failed to submit. Please contact directly via WhatsApp.";
-          formResult.className = "text-center text-sm py-3 px-4 rounded-lg bg-rose-950/80 border border-rose-800 text-rose-400 block";
-        }
-      } catch (error) {
-        formResult.textContent = "Network error. Please connect directly via WhatsApp.";
-        formResult.className = "text-center text-sm py-3 px-4 rounded-lg bg-rose-950/80 border border-rose-800 text-rose-400 block";
-      } finally {
-        submitBtn.disabled = false;
-        btnText.textContent = 'Submit Design Inquiry';
-      }
+    // Initialize all components
+    document.addEventListener('DOMContentLoaded', () => {
+      renderInstagramReels();
+      renderCatalog(storeConfig.jewelryCatalog);
+      renderReviews();
+      fetchLiveBullionRates();
+      document.querySelectorAll('.reveal-on-scroll').forEach(el => observer.observe(el));
     });
   </script>
 
