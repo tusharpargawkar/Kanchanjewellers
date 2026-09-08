@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- React 18, ReactDOM, and Babel for standalone runtime execution -->
+  <!-- React 18, ReactDOM, and Babel -->
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -33,11 +33,12 @@
     .gold-gradient-bg {
       background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
     }
-    
-    /* Subtle Golden Glow */
-    .gold-glow {
-      box-shadow: 0 0 25px -5px rgba(245, 158, 11, 0.25);
-    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #07090e; }
+    ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #d97706; }
   </style>
 </head>
 <body class="text-slate-100 antialiased selection:bg-amber-500 selection:text-black">
@@ -45,69 +46,75 @@
 
   <!-- REACT APPLICATION SCRIPT -->
   <script type="text/babel">
-    const { useState, useEffect } = React;
+    const { useState, useEffect, useRef } = React;
 
-    // =========================================================================
-    // STORE CONFIGURATION
-    // The owner can easily add/edit Instagram posts, rates, designs & reviews here
-    // =========================================================================
     const INITIAL_CONFIG = {
       storeName: "Kanchan Jewellers",
-      tagline: "Kopar Khairane's Trusted Hallmark & Antique Gold Destination",
       address: "Shop No. 7, City Square Bldg, Opp. Post Office & Gulabsons Dairy, Sector 7, Kopar Khairane, Navi Mumbai - 400709",
       phone: "+91 8793793949",
       whatsappNumber: "918793793949",
       instagramHandle: "kanchanjewellers_koparkhairane",
       instagramUrl: "https://www.instagram.com/kanchanjewellers_koparkhairane/?hl=en",
       
-      // Instagram Showcase Reels/Videos
-      // Embeds and renders directly on-page using Instagram iframe player with NO redirects
+      // REELS / VIDEO CARDS WITH HOVER-PLAY PREVIEW
+      // The video starts playing smoothly on mouse-hover and pauses on mouse-leave
       reels: [
         {
           id: "DD6KnIxocNb",
           title: "Antique Bridal Choker & Kundan Set",
           category: "Bridal",
           likes: "1.2k+",
-          url: "https://www.instagram.com/p/DD6KnIxocNb/"
+          poster: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=600&q=80",
+          videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+          instagramUrl: "https://www.instagram.com/p/DD6KnIxocNb/"
         },
         {
           id: "DGKxO5moz9d",
           title: "916 Hallmarked Gold Bangle Creations",
           category: "Daily Wear",
           likes: "940+",
-          url: "https://www.instagram.com/p/DGKxO5moz9d/"
+          poster: "https://images.unsplash.com/photo-1603561591411-07134e71a2a9?auto=format&fit=crop&w=600&q=80",
+          videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+          instagramUrl: "https://www.instagram.com/p/DGKxO5moz9d/"
         },
         {
           id: "DKglqKOuqiI",
           title: "Handcrafted Traditional Jhumkas",
           category: "Earrings",
           likes: "2.1k+",
-          url: "https://www.instagram.com/p/DKglqKOuqiI/"
+          poster: "https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&w=600&q=80",
+          videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+          instagramUrl: "https://www.instagram.com/p/DKglqKOuqiI/"
         },
         {
           id: "DPWg26cDFpT",
           title: "Exclusive Diamond Solitaire Rings",
           category: "Engagement",
           likes: "1.5k+",
-          url: "https://www.instagram.com/p/DPWg26cDFpT/"
+          poster: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=600&q=80",
+          videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyBlazes.mp4",
+          instagramUrl: "https://www.instagram.com/p/DPWg26cDFpT/"
         },
         {
           id: "DRhHa6lEgjd",
           title: "Festive Gold Chains & Mangalsutras",
           category: "Chains",
           likes: "1.8k+",
-          url: "https://www.instagram.com/p/DRhHa6lEgjd/"
+          poster: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=600&q=80",
+          videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
+          instagramUrl: "https://www.instagram.com/p/DRhHa6lEgjd/"
         },
         {
           id: "DaNd1_fyzEP",
           title: "Pure 999 Fine Silver Pooja Collection",
           category: "Silver",
           likes: "880+",
-          url: "https://www.instagram.com/p/DaNd1_fyzEP/"
+          poster: "https://images.unsplash.com/photo-1611591475837-7b64be654497?auto=format&fit=crop&w=600&q=80",
+          videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
+          instagramUrl: "https://www.instagram.com/p/DaNd1_fyzEP/"
         }
       ],
 
-      // Jewelry Catalog
       catalog: [
         {
           id: 1,
@@ -165,7 +172,6 @@
         }
       ],
 
-      // Google Reviews
       reviews: [
         {
           name: "Pooja Patil",
@@ -188,6 +194,91 @@
       ]
     };
 
+    // Hover Video Card Component
+    function ReelCard({ reel, onOpenModal }) {
+      const videoRef = useRef(null);
+      const [isPlaying, setIsPlaying] = useState(false);
+
+      const handleMouseEnter = () => {
+        if (videoRef.current) {
+          videoRef.current.play().then(() => {
+            setIsPlaying(true);
+          }).catch(() => {
+            // Auto-play policy handled
+          });
+        }
+      };
+
+      const handleMouseLeave = () => {
+        if (videoRef.current) {
+          videoRef.current.pause();
+          videoRef.current.currentTime = 0;
+          setIsPlaying(false);
+        }
+      };
+
+      return (
+        <div 
+          className="group rounded-2xl bg-slate-900/60 border border-slate-800 hover:border-amber-500/60 overflow-hidden transition-all duration-300 flex flex-col justify-between shadow-xl hover:-translate-y-1.5"
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
+          {/* Vertical Video Viewport with Hover Autoplay */}
+          <div className="relative h-72 sm:h-80 w-full overflow-hidden bg-black flex items-center justify-center cursor-pointer" onClick={() => onOpenModal(reel)}>
+            <video
+              ref={videoRef}
+              src={reel.videoUrl}
+              poster={reel.poster}
+              muted
+              playsInline
+              loop
+              preload="metadata"
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+
+            {/* Gradient Overlay & Badge */}
+            <div className={`absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 transition-opacity duration-300 ${isPlaying ? 'opacity-40' : 'opacity-80'}`}></div>
+
+            {/* Play/Hover Indicator Icon */}
+            <div className={`absolute w-12 h-12 rounded-full bg-black/60 border border-amber-500/40 text-amber-400 flex items-center justify-center backdrop-blur-md transition-all duration-300 ${isPlaying ? 'scale-75 opacity-0' : 'scale-100 opacity-90'}`}>
+              <i className="fas fa-play text-xs ml-0.5"></i>
+            </div>
+
+            {/* Tag & Likes overlay */}
+            <div className="absolute top-3 inset-x-3 flex items-center justify-between text-[11px] font-mono z-10">
+              <span className="px-2.5 py-0.5 rounded-full bg-black/70 backdrop-blur-md border border-amber-500/30 text-amber-300 uppercase">
+                {reel.category}
+              </span>
+              <span className="px-2 py-0.5 rounded-full bg-black/70 backdrop-blur-md text-slate-300 flex items-center gap-1">
+                <i className="fas fa-heart text-rose-500 text-[10px]"></i> {reel.likes}
+              </span>
+            </div>
+
+            {/* Hover Playing Badge */}
+            <div className={`absolute bottom-3 left-3 px-2.5 py-1 rounded-md bg-amber-500 text-slate-950 font-bold text-[10px] tracking-wider uppercase flex items-center gap-1.5 transition-opacity duration-300 ${isPlaying ? 'opacity-100' : 'opacity-0'}`}>
+              <span className="w-1.5 h-1.5 rounded-full bg-slate-950 animate-ping"></span> Playing Preview
+            </div>
+          </div>
+
+          {/* Details & Button */}
+          <div className="p-4 space-y-3">
+            <h3 className="font-semibold text-white text-sm sm:text-base group-hover:text-amber-300 transition-colors line-clamp-1">
+              {reel.title}
+            </h3>
+            <p className="text-xs text-slate-400">Hover to preview • Tap to view full reel & details</p>
+
+            <button 
+              onClick={() => onOpenModal(reel)}
+              className="w-full py-2.5 rounded-xl bg-slate-800/90 hover:bg-amber-500 hover:text-slate-950 group-hover:border-amber-500/50 font-bold text-xs uppercase tracking-wider text-slate-200 transition-all flex items-center justify-center gap-2 border border-slate-700/60"
+            >
+              <i className="fas fa-expand text-[10px]"></i>
+              <span>Watch Full Reel On Page</span>
+            </button>
+          </div>
+        </div>
+      );
+    }
+
     function App() {
       const [config] = useState(INITIAL_CONFIG);
       const [categoryFilter, setCategoryFilter] = useState('all');
@@ -196,15 +287,12 @@
       const [formData, setFormData] = useState({ name: '', phone: '', email: '', message: '' });
       const [formStatus, setFormStatus] = useState({ sending: false, message: '', error: false });
 
-      // Fetch Live Bullion Spot Prices in INR
       useEffect(() => {
         async function fetchRates() {
           try {
             const res = await fetch('https://api.frankfurter.app/latest?from=USD&to=INR');
             const data = await res.json();
             const usdInr = data.rates.INR || 83.9;
-            
-            // Standard per 10 grams calculation (1 Troy Oz = 31.1035g)
             const g24k = Math.round((2490 * usdInr / 31.1035) * 10);
             const g22k = Math.round(g24k * 0.916);
             const sil = Math.round((31.5 * usdInr / 31.1035) * 10);
@@ -215,7 +303,6 @@
               silver: `₹${sil.toLocaleString('en-IN')}`
             });
           } catch (e) {
-            // Reliable fallback
             setRates({ gold24k: "₹74,250", gold22k: "₹68,010", silver: "₹910" });
           }
         }
@@ -274,7 +361,7 @@
             <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-                <span className="text-amber-400 font-bold uppercase tracking-wider text-[11px]">Today's Gold & Silver Rate (Kopar Khairane):</span>
+                <span className="text-amber-400 font-bold uppercase tracking-wider text-[11px]">Today's Spot Bullion Rates (Kopar Khairane):</span>
               </div>
               <div className="flex items-center gap-6">
                 <span className="text-slate-400">24K: <strong className="text-amber-300 font-semibold">{rates.gold24k}</strong>/10g</span>
@@ -310,9 +397,9 @@
                   href={config.instagramUrl} 
                   target="_blank" 
                   rel="noreferrer"
-                  className="px-3.5 py-2 rounded-full bg-gradient-to-r from-purple-600 via-pink-600 to-amber-500 hover:brightness-110 text-white text-xs font-bold transition flex items-center gap-1.5 shadow-md shadow-pink-900/30"
+                  className="px-4 py-2 rounded-full bg-gradient-to-r from-purple-600 via-pink-600 to-amber-500 hover:brightness-110 text-white text-xs font-bold transition flex items-center gap-1.5 shadow-md shadow-pink-900/30"
                 >
-                  <i className="fab fa-instagram"></i> <span>Follow Us</span>
+                  <i className="fab fa-instagram"></i> <span>Follow</span>
                 </a>
                 <a 
                   href={`https://wa.me/${config.whatsappNumber}`} 
@@ -326,8 +413,8 @@
             </div>
           </header>
 
-          {/* HERO SECTION */}
-          <section className="relative pt-24 pb-20 px-6 text-center overflow-hidden">
+          {/* HERO */}
+          <section className="relative pt-24 pb-16 px-6 text-center overflow-hidden">
             <div className="max-w-4xl mx-auto space-y-6">
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-950/40 border border-amber-800/40 text-amber-300 text-xs font-semibold tracking-wider uppercase">
                 <i className="fas fa-sparkles text-amber-400"></i> Pure Gold • Bespoke Bridal • Antique Ornaments
@@ -350,7 +437,7 @@
             </div>
           </section>
 
-          {/* INLINE INSTAGRAM VIDEOS & REELS SECTION */}
+          {/* REELS SECTION WITH HOVER PREVIEW CARDS */}
           <section id="reels" className="py-20 border-t border-slate-900 bg-[#08090d] px-6">
             <div className="max-w-7xl mx-auto space-y-10">
               <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
@@ -359,7 +446,7 @@
                     <i className="fab fa-instagram"></i> Live Instagram Video Showcase
                   </div>
                   <h2 className="font-luxury text-3xl font-bold text-white">Latest Reels & Offers</h2>
-                  <p className="text-slate-400 text-xs sm:text-sm">Click any reel to play directly on this page without leaving the website.</p>
+                  <p className="text-slate-400 text-xs sm:text-sm">Hover over any card to preview video • Click to view full reel & follow directly.</p>
                 </div>
 
                 <a 
@@ -374,55 +461,31 @@
                 </a>
               </div>
 
-              {/* Instagram Video Grid */}
+              {/* Grid of Interactive Reel Cards */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {config.reels.map((reel) => (
-                  <div 
+                  <ReelCard 
                     key={reel.id} 
-                    className="group rounded-2xl bg-slate-900/50 border border-slate-800 hover:border-amber-500/50 overflow-hidden transition-all duration-300 flex flex-col justify-between"
-                  >
-                    <div className="p-4 space-y-3">
-                      <div className="flex items-center justify-between text-xs font-mono">
-                        <span className="px-2.5 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400">
-                          {reel.category}
-                        </span>
-                        <span className="text-slate-500 flex items-center gap-1">
-                          <i className="fas fa-heart text-rose-500"></i> {reel.likes}
-                        </span>
-                      </div>
-                      <h3 className="font-semibold text-white text-base group-hover:text-amber-300 transition-colors">
-                        {reel.title}
-                      </h3>
-                      <p className="text-xs text-slate-400">Recorded live at our Kopar Khairane showroom</p>
-                    </div>
-
-                    {/* Interactive Video Play Button */}
-                    <div className="p-4 pt-0">
-                      <button 
-                        onClick={() => setActiveVideoModal(reel)}
-                        className="w-full py-3 rounded-xl bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 hover:from-amber-600 hover:to-yellow-500 group-hover:text-slate-950 font-bold text-xs uppercase tracking-wider text-slate-200 transition-all flex items-center justify-center gap-2 border border-slate-700/60"
-                      >
-                        <i className="fas fa-play text-amber-400 group-hover:text-slate-950 text-xs"></i>
-                        <span>Watch Video on Page</span>
-                      </button>
-                    </div>
-                  </div>
+                    reel={reel} 
+                    onOpenModal={(selectedReel) => setActiveVideoModal(selectedReel)} 
+                  />
                 ))}
               </div>
             </div>
           </section>
 
-          {/* INLINE INSTAGRAM POPUP VIDEO MODAL (NO REDIRECT) */}
+          {/* INLINE MODAL WITH FULL INSTAGRAM EMBED & FOLLOW BUTTON */}
           {activeVideoModal && (
             <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
-              <div className="relative w-full max-w-lg bg-[#090b10] border border-amber-500/40 rounded-3xl overflow-hidden shadow-2xl flex flex-col">
-                {/* Modal Header */}
-                <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between bg-black/60">
-                  <div className="flex items-center gap-2">
+              <div className="relative w-full max-w-md bg-[#090b10] border border-amber-500/40 rounded-3xl overflow-hidden shadow-2xl flex flex-col">
+                
+                {/* Header */}
+                <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between bg-black/70">
+                  <div className="flex items-center gap-2.5">
                     <i className="fab fa-instagram text-pink-500 text-lg"></i>
                     <div>
-                      <h4 className="text-xs font-bold text-white uppercase tracking-wider">Kanchan Jewellers Video Reel</h4>
-                      <p className="text-[10px] text-slate-400 font-mono">Playing inline</p>
+                      <h4 className="text-xs font-bold text-white uppercase tracking-wider">Kanchan Jewellers</h4>
+                      <p className="text-[10px] text-slate-400 font-mono">Official Reel</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
@@ -443,12 +506,12 @@
                   </div>
                 </div>
 
-                {/* Direct Instagram Embed Frame */}
-                <div className="p-4 flex justify-center bg-black min-h-[460px]">
+                {/* Instagram Iframe Video Player */}
+                <div className="p-3 bg-black flex justify-center">
                   <iframe 
                     src={`https://www.instagram.com/p/${activeVideoModal.id}/embed/`}
                     width="100%" 
-                    height="480" 
+                    height="470" 
                     frameBorder="0" 
                     scrolling="no" 
                     allowtransparency="true"
@@ -457,9 +520,9 @@
                   ></iframe>
                 </div>
 
-                {/* Modal Footer */}
-                <div className="p-4 border-t border-slate-800/80 bg-slate-950 flex items-center justify-between">
-                  <span className="text-xs font-medium text-slate-300 truncate mr-2">{activeVideoModal.title}</span>
+                {/* Footer Action */}
+                <div className="p-4 border-t border-slate-800 bg-slate-950 flex items-center justify-between gap-3">
+                  <span className="text-xs font-medium text-slate-300 truncate">{activeVideoModal.title}</span>
                   <button 
                     onClick={() => {
                       const selected = activeVideoModal;
@@ -468,14 +531,14 @@
                     }}
                     className="px-4 py-2 rounded-xl gold-gradient-bg text-slate-950 font-bold text-xs uppercase tracking-wider shrink-0"
                   >
-                    Inquire This Design
+                    Inquire Design
                   </button>
                 </div>
               </div>
             </div>
           )}
 
-          {/* JEWELRY SHOWCASE CATALOG */}
+          {/* JEWELRY CATALOG */}
           <section id="catalog" className="py-20 border-t border-slate-900 px-6">
             <div className="max-w-7xl mx-auto space-y-10">
               <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
@@ -485,7 +548,6 @@
                   <p className="text-slate-400 text-xs sm:text-sm">916 Hallmark pure gold, bridal sets, solitaires, and 999 fine silver.</p>
                 </div>
 
-                {/* Filters */}
                 <div className="flex flex-wrap gap-2">
                   {['all', 'gold', 'diamond', 'silver'].map(cat => (
                     <button
@@ -503,7 +565,6 @@
                 </div>
               </div>
 
-              {/* Product Cards Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 {filteredCatalog.map(product => (
                   <div key={product.id} className="group rounded-2xl bg-slate-900/40 border border-slate-800 overflow-hidden hover:border-amber-500/50 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between">
@@ -541,7 +602,7 @@
             </div>
           </section>
 
-          {/* VERIFIED GOOGLE REVIEWS */}
+          {/* VERIFIED REVIEWS */}
           <section id="reviews" className="py-20 border-t border-slate-900 bg-[#08090d] px-6">
             <div className="max-w-6xl mx-auto space-y-10">
               <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
@@ -584,7 +645,7 @@
             </div>
           </section>
 
-          {/* VISIT STORE & INQUIRY CONSULTATION */}
+          {/* VISIT STORE & INQUIRY FORM */}
           <section id="consultation" className="py-20 border-t border-slate-900 px-6">
             <div className="max-w-6xl mx-auto space-y-12">
               <div className="text-center space-y-2 max-w-xl mx-auto">
@@ -594,7 +655,7 @@
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                {/* Store Location & Map (5 Cols) */}
+                {/* Store Location & Map */}
                 <div className="lg:col-span-5 space-y-6">
                   <div className="p-6 rounded-2xl bg-slate-900/50 border border-slate-800 space-y-4">
                     <h3 className="font-luxury text-lg font-bold text-white flex items-center gap-2">
@@ -617,7 +678,6 @@
                     </div>
                   </div>
 
-                  {/* Dark-Themed Google Map iframe for Kopar Khairane */}
                   <div className="h-60 rounded-2xl overflow-hidden border border-slate-800">
                     <iframe 
                       title="Kanchan Jewellers Location Map"
@@ -632,7 +692,7 @@
                   </div>
                 </div>
 
-                {/* Consultation Inquiry Form (7 Cols) */}
+                {/* Consultation Form */}
                 <div className="lg:col-span-7">
                   <div className="p-8 rounded-2xl bg-slate-900/40 border border-slate-800 space-y-6">
                     <h3 className="font-luxury text-xl font-bold text-white">Send Price / Custom Order Inquiry</h3>
